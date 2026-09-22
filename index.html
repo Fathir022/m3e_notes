@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Material 3 Expressive Notes</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0..1,0" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div id="device">
+    
+    <!-- SCREEN 1: HOME -->
+    <div id="screen-1" class="screen active">
+        <div class="top-app-bar">
+            <div class="title">Note</div>
+        </div>
+        
+        <div class="content-area">
+            <div class="search-bar">
+                <span class="material-symbols-rounded" style="color: var(--onSurfaceVariant);">search</span>
+                <input type="text" placeholder="Search" id="search-input" onkeyup="renderNotes()">
+                <span class="material-symbols-rounded" style="color: var(--onSurfaceVariant);">mic</span>
+            </div>
+
+            <div class="stacked-list" id="notes-list">
+                <!-- Dynamically populated -->
+            </div>
+        </div>
+
+        <div class="fab-container">
+            <button class="extended-fab ripple" onclick="openAdd()">
+                <span class="material-symbols-rounded">edit</span> Create
+            </button>
+        </div>
+
+        <div class="nav-bar">
+            <div class="nav-item ripple" onclick="navProfile('screen-1')">
+                <div class="nav-indicator"><span class="material-symbols-rounded">account_circle</span></div>
+                <span class="nav-label">Profile</span>
+            </div>
+            <div class="nav-item active ripple">
+                <div class="nav-indicator"><span class="material-symbols-rounded">home</span></div>
+                <span class="nav-label">Home</span>
+            </div>
+            <div class="nav-item ripple" onclick="navSettings('screen-1')">
+                <div class="nav-indicator"><span class="material-symbols-rounded">settings</span></div>
+                <span class="nav-label">Settings</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- SCREEN 2: ADD/EDIT NOTES -->
+    <div id="screen-2" class="screen">
+        <div class="top-app-bar">
+            <button class="icon-btn ripple" onclick="backFromAdd()"><span class="material-symbols-rounded">arrow_back</span></button>
+            <div class="title">Add Notes</div>
+            <button class="icon-btn ripple" onclick="resetText()"><span class="material-symbols-rounded">restart_alt</span></button>
+            <button class="icon-btn ripple" onclick="deleteNote()"><span class="material-symbols-rounded">delete</span></button>
+        </div>
+
+        <div class="content-area editor-container">
+            <div class="note-box">
+                <input type="text" id="note-title" class="title-input" placeholder="Title">
+                <div id="note-content" contenteditable="true" class="content-input"></div>
+            </div>
+            
+            <div class="floating-toolbar" id="editor-toolbar">
+                <button class="icon-btn ripple" data-cmd="bold" onmousedown="event.preventDefault()" onclick="execCmd('bold')"><span class="material-symbols-rounded">format_bold</span></button>
+                <button class="icon-btn ripple" data-cmd="italic" onmousedown="event.preventDefault()" onclick="execCmd('italic')"><span class="material-symbols-rounded">format_italic</span></button>
+                <button class="icon-btn ripple" data-cmd="underline" onmousedown="event.preventDefault()" onclick="execCmd('underline')"><span class="material-symbols-rounded">format_underlined</span></button>
+                <button class="icon-btn ripple" onmousedown="event.preventDefault()" onclick="attachFile()"><span class="material-symbols-rounded">attach_file</span></button>
+            </div>
+            
+            <button class="btn filled-btn ripple" onclick="saveNote()">
+                <span class="material-symbols-rounded">check_circle</span> Save
+            </button>
+        </div>
+    </div>
+
+    <!-- SCREEN 3: PROFILE -->
+    <div id="screen-3" class="screen">
+        <div class="top-app-bar">
+            <button class="icon-btn ripple" onclick="backFromProfile()"><span class="material-symbols-rounded">arrow_back</span></button>
+            <div class="title">Profile</div>
+        </div>
+        
+        <div class="profile-container">
+            <div class="profile-image-wrapper">
+                <img src="https://ui-avatars.com/api/?name=User&size=400&background=EADDFF&color=21005D" alt="Profile" class="profile-img" id="profile-img-preview">
+            </div>
+            
+            <div class="profile-name-container">
+                <input type="text" id="profile-name-input" class="profile-name-input" placeholder="Name" onchange="saveProfileName()" autocomplete="off">
+                <span class="material-symbols-rounded edit-icon" onclick="document.getElementById('profile-name-input').focus()">edit</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- SCREEN 4: SETTINGS -->
+    <div id="screen-4" class="screen">
+        <div class="top-app-bar">
+            <button class="icon-btn ripple" onclick="backFromSettings()"><span class="material-symbols-rounded">arrow_back</span></button>
+            <div class="title">Settings</div>
+        </div>
+        
+        <div class="content-area">
+            
+            <!-- Tema dan Palettes -->
+            <div class="theme-settings-container">
+                <div class="segmented-control">
+                    <button class="segment-btn active" id="btn-mode-light" onclick="setThemeMode('light')">
+                        <span class="material-symbols-rounded">light_mode</span> Light
+                    </button>
+                    <button class="segment-btn" id="btn-mode-dark" onclick="setThemeMode('dark')">
+                        <span class="material-symbols-rounded">dark_mode</span> Dark
+                    </button>
+                </div>
+
+                <div class="palette-list">
+                    <div class="palette-item active" id="palette-purple" onclick="setPalette('purple')">
+                        <div class="palette-icon bg-purple"></div>
+                        <div class="palette-name">Purple</div>
+                        <div class="palette-indicator"><div class="ind-c1 bg-purple-main"></div><div class="ind-c2"></div><div class="ind-c3"></div><div class="ind-c4"></div></div>
+                    </div>
+                    <div class="palette-item" id="palette-blue" onclick="setPalette('blue')">
+                        <div class="palette-icon bg-blue"></div>
+                        <div class="palette-name">Blue</div>
+                        <div class="palette-indicator"><div class="ind-c1 bg-blue-main"></div><div class="ind-c2"></div><div class="ind-c3"></div><div class="ind-c4"></div></div>
+                    </div>
+                    <div class="palette-item" id="palette-green" onclick="setPalette('green')">
+                        <div class="palette-icon bg-green"></div>
+                        <div class="palette-name">Green</div>
+                        <div class="palette-indicator"><div class="ind-c1 bg-green-main"></div><div class="ind-c2"></div><div class="ind-c3"></div><div class="ind-c4"></div></div>
+                    </div>
+                    <div class="palette-item" id="palette-coral" onclick="setPalette('coral')">
+                        <div class="palette-icon bg-coral"></div>
+                        <div class="palette-name">Coral</div>
+                        <div class="palette-indicator"><div class="ind-c1 bg-coral-main"></div><div class="ind-c2"></div><div class="ind-c3"></div><div class="ind-c4"></div></div>
+                    </div>
+                    <div class="palette-item" id="palette-amber" onclick="setPalette('amber')">
+                        <div class="palette-icon bg-amber"></div>
+                        <div class="palette-name">Amber</div>
+                        <div class="palette-indicator"><div class="ind-c1 bg-amber-main"></div><div class="ind-c2"></div><div class="ind-c3"></div><div class="ind-c4"></div></div>
+                    </div>
+                    <div class="palette-item" id="palette-teal" onclick="setPalette('teal')">
+                        <div class="palette-icon bg-teal"></div>
+                        <div class="palette-name">Teal</div>
+                        <div class="palette-indicator"><div class="ind-c1 bg-teal-main"></div><div class="ind-c2"></div><div class="ind-c3"></div><div class="ind-c4"></div></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Opsi Lainnya -->
+            <div class="stacked-list" style="margin-top: 24px;">
+                <div class="list-item">
+                    <div class="list-text-content">
+                        <div class="list-headline">Animation Typing</div>
+                        <div class="list-supporting">Animation Typing Text</div>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox" id="anim-switch" checked onchange="toggleAnim()">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                <div class="list-item">
+                    <div class="list-text-content">
+                        <div class="list-headline">Editor Tools</div>
+                        <div class="list-supporting">Show formatting toolbar</div>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox" id="toolbar-switch" checked onchange="toggleToolbar()">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <div class="nav-bar">
+            <div class="nav-item ripple" onclick="navProfile('screen-4')">
+                <div class="nav-indicator"><span class="material-symbols-rounded">account_circle</span></div>
+                <span class="nav-label">Profile</span>
+            </div>
+            <div class="nav-item ripple" onclick="navHome('screen-4')">
+                <div class="nav-indicator"><span class="material-symbols-rounded">home</span></div>
+                <span class="nav-label">Home</span>
+            </div>
+            <div class="nav-item active ripple">
+                <div class="nav-indicator"><span class="material-symbols-rounded">settings</span></div>
+                <span class="nav-label">Settings</span>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
